@@ -59,6 +59,7 @@ typedef enum {
 #define OAREPORT_REASON_SHIFT          19
 #define OAREPORT_REASON_TIMER          (1<<0)
 #define OAREPORT_REASON_CTX_SWITCH     (1<<3)
+#define OAREPORT_REASON_GO	       (1<<4)
 
 struct gputop_devinfo {
     uint32_t devid;

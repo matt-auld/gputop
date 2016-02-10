@@ -1168,7 +1168,8 @@ read_i915_perf_samples(struct gputop_perf_stream *stream)
 		     * patches, in particular his work which exposes to user-space
 		     * a sample-source-field for OA reports. */
 		    if (stream->query->per_ctx_mode && gputop_devinfo.gen >= 8) {
-			if (!(reason & OAREPORT_REASON_CTX_SWITCH))
+			if (!(reason & (OAREPORT_REASON_CTX_SWITCH |
+					OAREPORT_REASON_GO)))
 			    current_user->sample(stream, stream->oa.last, report);
 		    } else {
 			current_user->sample(stream, stream->oa.last, report);
