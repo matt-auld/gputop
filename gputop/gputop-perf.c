@@ -381,6 +381,9 @@ gputop_open_i915_perf_oa_query(struct gputop_perf_query *query,
         properties[p++] = DRM_I915_PERF_OA_EXPONENT_PROP;
         properties[p++] = period_exponent;
 
+        properties[p++] = DRM_I915_PERF_OA_ENABLE_RC6;
+        properties[p++] = true;
+
         if (query->per_ctx_mode) {
             struct ctx_handle *ctx;
 

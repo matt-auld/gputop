@@ -116,6 +116,8 @@ enum i915_perf_property_id {
          */
         DRM_I915_PERF_OA_EXPONENT_PROP,
 
+        DRM_I915_PERF_OA_ENABLE_RC6,
+
         /**
          * The value of this property set to 1 requests inclusion of sample
          * source field to be given to userspace. The sample source field
