@@ -52,6 +52,7 @@ struct gputop_worker_query {
     int id;
     uint64_t aggregation_period;
     bool per_ctx_mode;
+    bool is_stream_paused;
 
     struct oa_clock {
         uint64_t start;
@@ -396,12 +397,14 @@ handle_oa_query_i915_perf_data(struct gputop_worker_query *query, uint8_t *data,
                  * This can be simplified once our kernel rebases with Sourab'
                  * patches, in particular his work which exposes to user-space
                  * a sample-source-field for OA reports. */
-                if (query->per_ctx_mode && gputop_devinfo.gen >= 8) {
+                if (query->is_stream_paused || (query->per_ctx_mode && gputop_devinfo.gen >= 8)) {
                     uint32_t reason = (((uint32_t*)report)[0] >> OAREPORT_REASON_SHIFT) &
                         OAREPORT_REASON_MASK;
 
-                    if (!(reason & OAREPORT_REASON_CTX_SWITCH))
+                    if (!query->is_stream_paused && !(reason & OAREPORT_REASON_CTX_SWITCH))
                       gputop_oa_accumulate_reports(oa_query, last, report);
+
+		    query->is_stream_paused = false;
                 } else {
                     gputop_oa_accumulate_reports(oa_query, last, report);
                 }
@@ -518,6 +521,17 @@ gputop_webworker_update_query_period(uint32_t id,
         }
     }
 
+}
+
+void EMSCRIPTEN_KEEPALIVE
+gputop_webworker_update_stream_enabled(uint32_t id)
+{
+    struct gputop_worker_query *query;
+    gputop_list_for_each(query, &open_queries, link) {
+        if (query->id == id) {
+	    query->is_stream_paused = true;
+        }
+    }
 }
 
 

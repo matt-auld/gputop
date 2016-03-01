@@ -444,6 +444,55 @@ Gputop.prototype.close_oa_query = function(id, callback) {
     gputop_ui.syslog(msg.uuid + " sent: Request close query ");
 }
 
+Gputop.prototype.enable_stream = function(id, callback) {
+    var metric = this.query_metric_handles_[id];
+
+    if ( metric.waiting_ack_ == true ) {
+        gputop_ui.show_alert("Waiting ACK","alert-danger");
+        return;
+    }
+
+    if (metric == undefined) {
+        gputop_ui.show_alert("Cannot close query "+id+", which does not exist ","alert-danger");
+        return;
+    }
+
+    gputop_ui.show_alert("Closing query "+ metric.name_, "alert-info");
+
+    var msg = new this.builder_.Request();
+    msg.uuid = this.generate_uuid();
+    msg.enable_stream = metric.oa_query_id_;
+    msg.encode();
+    this.socket_.send(msg.toArrayBuffer());
+
+    gputop_ui.syslog(msg.uuid + " sent: Request close query ");
+}
+
+Gputop.prototype.disable_stream = function(id, callback) {
+    var metric = this.query_metric_handles_[id];
+
+    if ( metric.waiting_ack_ == true ) {
+        gputop_ui.show_alert("Waiting ACK","alert-danger");
+        return;
+    }
+
+    if (metric == undefined) {
+        gputop_ui.show_alert("Cannot close query "+id+", which does not exist ","alert-danger");
+        return;
+    }
+
+    gputop_ui.show_alert("Closing query "+ metric.name_, "alert-info");
+
+    var msg = new this.builder_.Request();
+    msg.uuid = this.generate_uuid();
+    msg.disable_stream = metric.oa_query_id_;
+    msg.encode();
+    this.socket_.send(msg.toArrayBuffer());
+
+    _gputop_webworker_update_stream_enabled(metric.oa_query_id);
+    gputop_ui.syslog(msg.uuid + " sent: Request close query ");
+}
+
 // Moves the guid into the emscripten HEAP and returns a ptr to it
 Gputop.prototype.get_emc_guid = function(guid) {
     // Allocate a temporal buffer for the IDs in gputop, we will reuse this buffer.

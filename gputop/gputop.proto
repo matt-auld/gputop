@@ -153,5 +153,7 @@ message Request
         bool get_features = 2;
         OpenQuery open_query = 3;
         uint32 close_query = 4;
+        uint32 enable_stream = 5;
+        uint32 disable_stream = 6;
     }
 }

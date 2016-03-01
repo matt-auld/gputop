@@ -824,6 +824,40 @@ handle_close_query(h2o_websocket_conn_t *conn,
 }
 
 static void
+handle_enable_stream(h2o_websocket_conn_t *conn,
+                   Gputop__Request *request)
+{
+    struct gputop_perf_stream *stream;
+    uint32_t id = request->close_query;
+
+    dbg("handle_enable_stream: uuid=%s\n", request->uuid);
+
+    gputop_list_for_each(stream, &streams, user.link) {
+        if (stream->user.id == id) {
+	    gputop_enable_stream(stream->fd);
+            return;
+        }
+    }
+}
+
+static void
+handle_disable_query(h2o_websocket_conn_t *conn,
+                   Gputop__Request *request)
+{
+    struct gputop_perf_stream *stream;
+    uint32_t id = request->close_query;
+
+    dbg("handle_disable_stream: uuid=%s\n", request->uuid);
+
+    gputop_list_for_each(stream, &streams, user.link) {
+        if (stream->user.id == id) {
+	    gputop_disable_stream(stream->fd);
+            return;
+        }
+    }
+}
+
+static void
 handle_get_features(h2o_websocket_conn_t *conn,
                     Gputop__Request *request)
 {
@@ -938,6 +972,14 @@ static void on_ws_message(h2o_websocket_conn_t *conn,
             fprintf(stderr, "CloseQuery request received\n");
             handle_close_query(conn, request);
             break;
+	case GPUTOP__REQUEST__REQ_ENABLE_STREAM:
+            fprintf(stderr, "EnableStream request received\n");
+	    handle_enable_stream(conn, request);
+	    break;
+	case GPUTOP__REQUEST__REQ_DISABLE_STREAM:
+            fprintf(stderr, "DisableStream request received\n");
+	    handle_disable_query(conn, request);
+	    break;
         case GPUTOP__REQUEST__REQ__NOT_SET:
             assert(0);
         }

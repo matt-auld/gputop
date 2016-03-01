@@ -373,6 +373,8 @@ void gputop_perf_stream_close(struct gputop_perf_stream *stream,
                               void (*on_close_cb)(struct gputop_perf_stream *stream));
 void gputop_perf_stream_ref(struct gputop_perf_stream *stream);
 void gputop_perf_stream_unref(struct gputop_perf_stream *stream);
+int gputop_enable_stream(int stream_fd);
+int gputop_disable_stream(int stream_fd);
 #endif
 
 #endif /* _GPUTOP_PERF_H_ */

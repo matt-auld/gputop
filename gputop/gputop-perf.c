@@ -357,6 +357,16 @@ gputop_perf_stream_unref(struct gputop_perf_stream *stream)
     }
 }
 
+int gputop_disable_stream(int stream_fd)
+{
+    return perf_ioctl(stream_fd, I915_PERF_IOCTL_DISABLE, 0);
+}
+
+int gputop_enable_stream(int stream_fd)
+{
+    return perf_ioctl(stream_fd, I915_PERF_IOCTL_ENABLE, 0);
+}
+
 struct gputop_perf_stream *
 gputop_open_i915_perf_oa_query(struct gputop_perf_query *query,
                                int period_exponent,

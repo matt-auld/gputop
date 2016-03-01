@@ -6,8 +6,15 @@
 <!-- Options bar -->
 <div class="well" id="options_bar" style="display: table">
     <div style="display: table-cell; vertical-align: middle;">
-    <label><b>Stop query</b></label>
-    <button type="button" id="button_stop" class="btn" onclick="buttonTogglePlay()" >
+    <label><b>Close Stream</b></label>
+    <button type="button" id="button_stop" class="btn" onclick="buttonToggleQuery()" >
+        <div id="toggle-query" class="glyphicon glyphicon-pause"></div>
+    </button>
+    </div>
+
+    <div style="display: table-cell; vertical-align: middle;">
+    <label><b>Pause stream</b></label>
+    <button type="button" id="button_stop" class="btn" onclick="buttonToggleStream()" >
         <div id="toggle-query" class="glyphicon glyphicon-pause"></div>
     </button>
     </div>
@@ -32,16 +39,29 @@
 <div class = "tab-content" id = "counter_metrics"></div>
 
 <script>
-    function buttonTogglePlay(){
+    function buttonToggleQuery(){
         var iSelector = $("#toggle-query");
         if(iSelector.hasClass('glyphicon-pause')) {
             iSelector.removeClass('glyphicon-pause')
             iSelector.addClass('glyphicon-play')
-            gputop_ui.btn_close_current_query();
+	    gputop_ui.btn_close_current_query();
         } else {
             iSelector.removeClass('glyphicon-play')
             iSelector.addClass('glyphicon-pause')
-            gputop.open_oa_query_for_trace(global_guid);
+	    gputop.open_oa_query_for_trace(global_guid);
+        }
+    }
+
+    function buttonToggleStream(){
+        var iSelector = $("#toggle-query");
+        if(iSelector.hasClass('glyphicon-pause')) {
+            iSelector.removeClass('glyphicon-pause')
+            iSelector.addClass('glyphicon-play')
+	    gputop_ui.btn_disable_current_stream();
+        } else {
+            iSelector.removeClass('glyphicon-play')
+            iSelector.addClass('glyphicon-pause')
+	    gputop_ui.btn_enable_current_stream();
         }
     }
 

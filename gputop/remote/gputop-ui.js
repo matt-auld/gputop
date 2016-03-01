@@ -267,15 +267,34 @@ GputopUI.prototype.btn_close_current_query = function() {
     });
 }
 
+GputopUI.prototype.btn_disable_current_stream = function() {
+    var active_query = gputop.query_active_;
+    if (active_query==undefined) {
+        gputop_ui.show_alert(" No Active Query","alert-info");
+        return;
+    }
+
+    gputop.disable_stream(active_query.oa_query_id_, function() {
+       gputop_ui.show_alert(" Success disabling stream","alert-info");
+    });
+}
+
+GputopUI.prototype.btn_enable_current_stream = function() {
+    var active_query = gputop.query_active_;
+    if (active_query==undefined) {
+        gputop_ui.show_alert(" No Active Query","alert-info");
+        return;
+    }
+
+    gputop.enable_stream(active_query.oa_query_id_, function() {
+       gputop_ui.show_alert(" Success enabling stream","alert-info");
+    });
+}
+
 // jquery code
 $( document ).ready(function() {
-    //log = $( "#log" );
     log = document.getElementById("log");
 
-/*
-    $( "#gputop-entries" ).append( '<li><a id="close_query" href="#" onClick>Close Query</a></li>' );
-    $( '#close_query' ).click( gputop_ui.btn_close_current_query);
-*/
     gputop_ui.init_interface();
     $( '#editor' ).wysiwyg();
 
